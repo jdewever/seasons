@@ -3,13 +3,13 @@
 	"id": "seasons",
 	"version": "${version}",
 	"name": "Seasons",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Seasons in Minecraft, again",
 	"authors": [
-		"Me!"
+		"Jonas De Wever"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"email": "dev@jonasdewever.xyz",
+		"sources": "https://github.com/jdewever/seasons"
 	},
 	"license": "GPL-3.0-or-later",
 	"icon": "assets/seasons/icon.png",
