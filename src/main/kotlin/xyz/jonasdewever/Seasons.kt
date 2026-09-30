@@ -1,21 +1,31 @@
 package xyz.jonasdewever
 
 import net.fabricmc.api.ModInitializer
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.minecraft.resources.Identifier
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import xyz.jonasdewever.commands.SCommands
+import xyz.jonasdewever.init.API
+import xyz.jonasdewever.api.SeasonHandler
 
 object Seasons : ModInitializer {
-	const val MOD_ID: String = "seasons"
+    const val MOD_ID: String = "seasons"
+    const val MOD_NAME: String = "Seasons"
+    val LOGGER: Logger = LoggerFactory.getLogger(MOD_NAME)
 
-	private val LOGGER = LoggerFactory.getLogger(MOD_ID)
+    override fun onInitialize() {
+        LOGGER.info("Hello Fabric world!")
 
-	override fun onInitialize() {
-		// This code runs as soon as Minecraft is in a mod-load-ready state.
-		// However, some things (like resources) may still be uninitialized.
-		// Proceed with mild caution.
+        registerEvents()
+        API.init()
+    }
 
-		LOGGER.info("Hello Fabric world!")
-	}
+    private fun registerEvents() {
+        ServerTickEvents.END_LEVEL_TICK.register(SeasonHandler::onTick)
+        CommandRegistrationCallback.EVENT.register(SCommands::onRegisterCommands)
+    }
 
     @JvmStatic
     fun id(path: String): Identifier = Identifier.fromNamespaceAndPath(MOD_ID, path)
