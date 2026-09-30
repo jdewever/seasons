@@ -26,6 +26,9 @@
 				"value": "xyz.jonasdewever.client.SeasonsClient",
 				"adapter": "kotlin"
 			}
+		],
+		"fabric-datagen": [
+			"xyz.jonasdewever.client.dataGen.SeasonsDataGenerator"
 		]
 	},
 	"mixins": [
