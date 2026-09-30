@@ -2,11 +2,13 @@ package xyz.jonasdewever
 
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
+import net.fabricmc.fabric.api.event.lifecycle.v1.CommonLifecycleEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.minecraft.resources.Identifier
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import xyz.jonasdewever.commands.SCommands
+import xyz.jonasdewever.growth.CropGrowthRules
 import xyz.jonasdewever.init.API
 import xyz.jonasdewever.api.SeasonHandler
 
@@ -24,6 +26,7 @@ object Seasons : ModInitializer {
 
     private fun registerEvents() {
         ServerTickEvents.END_LEVEL_TICK.register(SeasonHandler::onTick)
+        CommonLifecycleEvents.TAGS_LOADED.register(CropGrowthRules::onTagsUpdated)
         CommandRegistrationCallback.EVENT.register(SCommands::onRegisterCommands)
     }
 
