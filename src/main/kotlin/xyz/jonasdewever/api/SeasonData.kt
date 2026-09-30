@@ -1,11 +1,9 @@
-package xyz.jonasdewever.season
+package xyz.jonasdewever.api
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.world.level.saveddata.SavedData
 import xyz.jonasdewever.Seasons
-import xyz.jonasdewever.api.STime
-import xyz.jonasdewever.api.Season
 
 class SeasonData(var yearTicks: Int) : SavedData() {
     constructor() : this(calcDefaultTicks())
