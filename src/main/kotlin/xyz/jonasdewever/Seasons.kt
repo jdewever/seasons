@@ -7,10 +7,11 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.minecraft.resources.Identifier
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import xyz.jonasdewever.api.SeasonHandler
 import xyz.jonasdewever.commands.SCommands
+import xyz.jonasdewever.config.Config
 import xyz.jonasdewever.growth.CropGrowthRules
 import xyz.jonasdewever.init.API
-import xyz.jonasdewever.api.SeasonHandler
 
 object Seasons : ModInitializer {
     const val MOD_ID: String = "seasons"
@@ -20,6 +21,7 @@ object Seasons : ModInitializer {
     override fun onInitialize() {
         LOGGER.info("Hello Fabric world!")
 
+        println(Config.startSeason.toString())
         registerEvents()
         API.init()
     }

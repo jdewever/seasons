@@ -1,12 +1,17 @@
 package xyz.jonasdewever.api
 
+import xyz.jonasdewever.config.Config
+
 class STime(val ticks: Int) : ISeasonTime {
     override val dayLength: Int
         get() = 24000
+
     override val subSeasonLength: Int
-        get() = dayLength * 8
+        get() = dayLength * Config.subSeasonDays.get()
+
     override val seasonLength: Int
         get() = subSeasonLength * 3
+    
     override val yearLength: Int
         get() = Season.SubSeason.entries.size * subSeasonLength
 
