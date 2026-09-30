@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.world.level.saveddata.SavedData
 import xyz.jonasdewever.Seasons
+import xyz.jonasdewever.config.Config
 
 class SeasonData(var yearTicks: Int) : SavedData() {
     constructor() : this(calcDefaultTicks())
@@ -19,10 +20,10 @@ class SeasonData(var yearTicks: Int) : SavedData() {
         val DATA_IDENTIFIER = Seasons.id("seasons")
 
         fun calcDefaultTicks(): Int {
-            val STARTING_SEASON = Season.SPRING.ordinal // TODO get from config?
+            val startingSeason = Config.startSeason.get()
 
-            return if (STARTING_SEASON > 0) {
-                ((STARTING_SEASON - 1) * STime.EPOCH.subSeasonLength)
+            return if (startingSeason > 0) {
+                ((startingSeason - 1) * STime.EPOCH.subSeasonLength)
             } else 0
         }
     }
