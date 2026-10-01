@@ -9,7 +9,6 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import xyz.jonasdewever.api.SeasonHandler
 import xyz.jonasdewever.commands.SCommands
-import xyz.jonasdewever.config.Config
 import xyz.jonasdewever.growth.CropGrowthRules
 import xyz.jonasdewever.init.API
 import xyz.jonasdewever.network.Payloads
@@ -22,7 +21,7 @@ object Seasons : ModInitializer {
     override fun onInitialize() {
         LOGGER.info("Hello Fabric world!")
 
-        println(Config.startSeason.toString())
+        SCommands.registerArguments()
         registerEvents()
         Payloads.registerAll()
         API.init()
