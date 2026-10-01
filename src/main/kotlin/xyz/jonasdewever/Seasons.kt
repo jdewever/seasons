@@ -12,6 +12,7 @@ import xyz.jonasdewever.commands.SCommands
 import xyz.jonasdewever.config.Config
 import xyz.jonasdewever.growth.CropGrowthRules
 import xyz.jonasdewever.init.API
+import xyz.jonasdewever.network.Payloads
 
 object Seasons : ModInitializer {
     const val MOD_ID: String = "seasons"
@@ -23,6 +24,7 @@ object Seasons : ModInitializer {
 
         println(Config.startSeason.toString())
         registerEvents()
+        Payloads.registerAll()
         API.init()
     }
 
