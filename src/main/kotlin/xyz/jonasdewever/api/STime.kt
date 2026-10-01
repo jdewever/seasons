@@ -24,6 +24,9 @@ class STime(val ticks: Int) : ISeasonTime {
             return Season.SubSeason.entries[index]
         }
 
+    override val currentYearTicks: Int
+        get() = ticks
+
     companion object {
         val EPOCH = STime(0)
     }

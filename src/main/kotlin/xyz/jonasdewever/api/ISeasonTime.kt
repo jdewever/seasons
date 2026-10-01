@@ -8,4 +8,6 @@ interface ISeasonTime {
 
     val currentSeason: Season
     val currentSubSeason: Season.SubSeason
+
+    val currentYearTicks: Int
 }
