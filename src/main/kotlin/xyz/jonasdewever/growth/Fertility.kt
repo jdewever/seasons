@@ -65,6 +65,19 @@ object Fertility {
         }
     }
 
+    fun seasonsForCrop(blockName: String): List<Season> {
+        if (!isAffectedPlant(blockName)) return mutableListOf()
+
+        val seasonList = mutableListOf<Season>()
+
+        if (springPlants.contains(blockName)) seasonList.add(Season.SPRING)
+        if (summerPlants.contains(blockName)) seasonList.add(Season.SUMMER)
+        if (autumnPlants.contains(blockName)) seasonList.add(Season.AUTUMN)
+        if (winterPlants.contains(blockName)) seasonList.add(Season.WINTER)
+
+        return seasonList
+    }
+
     private fun populateSeasonCrops(tag: TagKey<Block>, cropSet: MutableSet<String>, mask: Int) {
         BuiltInRegistries.BLOCK.get(tag).ifPresent { blocks ->
             blocks.forEach { block ->
