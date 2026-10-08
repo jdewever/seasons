@@ -13,6 +13,8 @@ object Config {
     init {
         val builder = ConfigBuilders.newTomlConfig("season", null, false)
 
+        builder.push("Seasons").categoryComment("Pertaining the base season settings")
+
         startSeason =
             builder.comment("Which season does the game start in on day 1? From 0 (early spring) to 11 (late winter).")
                 .define("startSeason", 0, 0, 11)
@@ -21,13 +23,21 @@ object Config {
             builder.comment("How many days should a subseason last? (There's three subseasons in a whole season.)")
                 .define("subSeasonDays", 3, 1, Int.MAX_VALUE)
 
+        builder.pop()
+
+        builder.push("Crops").categoryComment("Pertaining crops")
+
         offSeasonBehaviour =
-            builder.comment("Crop behaviour when in an off season. \n0 -> Grow slower \n1 -> Don't grow \n2 -> Die instantly \n3 -> Die on growth \n4 -> Return to first stage")
+            builder.comment("Crop behaviour when in an off season.")
                 .define("offSeasonBehaviour", CropOffSeasonBehaviour.GROW_SLOW)
+
+        builder.push("Mobs").categoryComment("Pertaining mobs")
 
         beesStayIndoorInWinter =
             builder.comment("Whether bees stay in their hives in the winter season.")
                 .define("beesStayIndoorInWinter", true)
+
+        builder.pop()
 
 
         builder.build()
