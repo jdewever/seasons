@@ -24,6 +24,9 @@ class STime(val ticks: Int) : ISeasonTime {
             return Season.SubSeason.entries[index]
         }
 
+    override val currentDayInCycle: Int
+        get() = ticks.floorDiv(dayLength)
+
     override val currentYearTicks: Int
         get() = ticks
 
