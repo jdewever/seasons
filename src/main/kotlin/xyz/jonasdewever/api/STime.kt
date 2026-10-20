@@ -1,6 +1,7 @@
 package xyz.jonasdewever.api
 
 import xyz.jonasdewever.config.Config
+import kotlin.math.roundToInt
 
 class STime(val ticks: Int) : ISeasonTime {
     override val dayLength: Int
@@ -24,8 +25,11 @@ class STime(val ticks: Int) : ISeasonTime {
             return Season.SubSeason.entries[index]
         }
 
-    override val currentDayInCycle: Int
-        get() = ticks.floorDiv(dayLength)
+    override val currentDayInCycle: Double
+        get() = ticks.toDouble().div(dayLength.toDouble())
+
+    override val currentDayInCycleRound: Int
+        get() = currentDayInCycle.roundToInt()
 
     override val currentYearTicks: Int
         get() = ticks

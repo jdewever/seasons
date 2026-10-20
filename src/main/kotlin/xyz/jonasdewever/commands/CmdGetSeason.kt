@@ -20,7 +20,13 @@ object CmdGetSeason {
         val data = SeasonHandler.getSeasonData(level)
         val sTime = STime(data.yearTicks)
 
-        val msg: Supplier<Component> = Supplier { Component.literal("Current season: ${sTime.currentSubSeason}") }
+        val lines = mutableListOf<String>()
+        lines.add("Current ticks: ${sTime.ticks}")
+        lines.add("Current subseason: ${sTime.currentSubSeason}")
+        lines.add("Current DoY: ${sTime.currentDayInCycleRound} | ${sTime.currentDayInCycle}")
+
+        val msg: Supplier<Component> = Supplier { Component.literal(lines.joinToString("\n")) }
+
         ctx.source.sendSuccess(msg, true)
 
         return 1
