@@ -46,7 +46,7 @@ object Fertility {
     fun isInSeason(blockName: String, level: ServerLevel): Boolean {
         // todo biome dependant season, underground, infertile biomes, tropical biomes, year round
 
-        return when (ServerClientHelper.getSeasonState(level).currentSeason) {
+        return isAffectedPlant(blockName) && when (ServerClientHelper.getSeasonState(level).currentSeason) {
             Season.SPRING -> {
                 springPlants.contains(blockName)
             }
