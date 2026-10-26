@@ -1,6 +1,7 @@
 package xyz.jonasdewever.api
 
 import xyz.jonasdewever.config.Config
+import xyz.jonasdewever.growth.Fertility
 import xyz.jonasdewever.util.SMath
 import kotlin.math.floor
 
@@ -13,6 +14,11 @@ data class Keyframe(val day: Double, val value: Double) {
         }
     }
 }
+
+// todo if strict, NO growth outside of season
+// todo if not strict, when reaching slow growth rate, follow OSS behaviour
+// TODO allow wrapping; eg. day 0 of early spring should interpolate between the winter values and the early spring one
+
 
 class Crop private constructor(val keyframes: List<Keyframe>) {
     fun getModifier(day: Int): Double {
@@ -44,37 +50,52 @@ class Crop private constructor(val keyframes: List<Keyframe>) {
         return 1.0
     }
 
+    // TODO Allow for parsing from configs
     companion object {
 
-        fun fromName(name: String): Crop {
-            // todo check season and apply keyframes
+        // TODO play around with values for early and late
+        const val PEAK_GROWTH: Double = 1.2
+        const val EARLY_GROWTH: Double = .8
+        const val LATE_GROWTH: Double = .9
+        val slowGrowthRate = Config.slowGrowthLowerLimit.get()
 
-            // default
-            return Crop(springOnlyKeyframes)
+        fun fromName(name: String): Crop {
+            val seasons = Fertility.seasonsForCrop(name)
+
+            if (seasons.isEmpty()) return Crop(generateKeyFrames(Season.SPRING))
+
+            return Crop(generateKeyFrames(seasons))
         }
 
-        // TODO config values
-        const val PEAK_GROWTH: Double = 1.2
-        const val PEAK_SIDESEASON: Double = .8
-        const val DROPOFF_SEASON: Double = .4
+        fun generateKeyFrames(peakSeasons: List<Season>): List<Keyframe> {
+            val list = mutableListOf<Keyframe>()
 
-        val springOnlyKeyframes = listOf(
-            Keyframe.fromSeason(Season.SubSeason.EARLY_SPRING, PEAK_SIDESEASON),
-            Keyframe.fromSeason(Season.SubSeason.MID_SPRING, PEAK_GROWTH),
-            Keyframe.fromSeason(Season.SubSeason.LATE_SPRING, DROPOFF_SEASON),
-            Keyframe.fromSeason(Season.SubSeason.EARLY_SUMMER, .2)
-        )
-        val summerOnlyKeyframes = listOf(
-            Keyframe.fromSeason(Season.SubSeason.EARLY_SUMMER, PEAK_SIDESEASON),
-            Keyframe.fromSeason(Season.SubSeason.MID_SUMMER, PEAK_GROWTH),
-            Keyframe.fromSeason(Season.SubSeason.LATE_SUMMER, DROPOFF_SEASON),
-            Keyframe.fromSeason(Season.SubSeason.EARLY_AUTUMN, .2)
-        )
-        val autumnOnlyKeyframes = listOf(
-            Keyframe.fromSeason(Season.SubSeason.EARLY_AUTUMN, PEAK_SIDESEASON),
-            Keyframe.fromSeason(Season.SubSeason.MID_AUTUMN, PEAK_GROWTH),
-            Keyframe.fromSeason(Season.SubSeason.LATE_AUTUMN, DROPOFF_SEASON),
-            Keyframe.fromSeason(Season.SubSeason.EARLY_WINTER, .2)
-        )
+            val sorted = peakSeasons.sortedBy { it.ordinal }
+
+            // TODO if seasons are adjacent, forego the late and early in the middles
+            for (season in sorted) {
+                list.addAll(peakKeyframes(season))
+            }
+
+            Season.entries.filter { !peakSeasons.contains(it) }.forEach { s ->
+                // add the slow growth rates to other seasons
+                list.add(Keyframe.fromSeason(s.early, slowGrowthRate))
+                list.add(Keyframe.fromSeason(s.late, slowGrowthRate))
+            }
+
+
+            return list.sortedBy { it.day }
+        }
+
+        fun generateKeyFrames(peakSeason: Season): List<Keyframe> = generateKeyFrames(listOf(peakSeason))
+
+        fun peakKeyframes(season: Season): List<Keyframe> {
+            val list = mutableListOf<Keyframe>()
+            list.add(Keyframe.fromSeason(season.early, EARLY_GROWTH))
+            list.add(Keyframe.fromSeason(season.peak, PEAK_GROWTH))
+            list.add(Keyframe.fromSeason(season.late, LATE_GROWTH))
+
+            return list
+        }
     }
 }
