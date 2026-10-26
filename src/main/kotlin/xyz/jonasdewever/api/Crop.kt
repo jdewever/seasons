@@ -15,13 +15,25 @@ data class Keyframe(val day: Double, val value: Double) {
     }
 }
 
-// todo if strict, NO growth outside of season
-// todo if not strict, when reaching slow growth rate, follow OSS behaviour
+// todo if not strict, when reaching slow growth rate, follow OSS behaviour (not here)
 // TODO allow wrapping; eg. day 0 of early spring should interpolate between the winter values and the early spring one
 
 
-class Crop private constructor(val keyframes: List<Keyframe>) {
+class Crop private constructor(val name: String, val keyframes: List<Keyframe>) {
+
+    val fertileSeasons: List<Season> = Fertility.seasonsForCrop(name)
+    val useStrict = Config.strictSeasons.get()
     fun getModifier(day: Int): Double {
+
+        if (useStrict) {
+            val season = STime.fromDay(day).currentSeason
+
+            if (fertileSeasons.contains(season)) {
+                // off season in strict mode
+                return 0.0
+            }
+        }
+
         val yearLength = STime.EPOCH.yearLength
         val x = day % yearLength
 
@@ -62,9 +74,9 @@ class Crop private constructor(val keyframes: List<Keyframe>) {
         fun fromName(name: String): Crop {
             val seasons = Fertility.seasonsForCrop(name)
 
-            if (seasons.isEmpty()) return Crop(generateKeyFrames(Season.SPRING))
+            if (seasons.isEmpty()) return Crop(name, generateKeyFrames(Season.SPRING))
 
-            return Crop(generateKeyFrames(seasons))
+            return Crop(name, generateKeyFrames(seasons))
         }
 
         fun generateKeyFrames(peakSeasons: List<Season>): List<Keyframe> {

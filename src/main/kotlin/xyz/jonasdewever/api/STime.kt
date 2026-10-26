@@ -12,7 +12,7 @@ class STime(val ticks: Int) : ISeasonTime {
 
     override val seasonLength: Int
         get() = subSeasonLength * 3
-    
+
     override val yearLength: Int
         get() = Season.SubSeason.entries.size * subSeasonLength
 
@@ -36,5 +36,7 @@ class STime(val ticks: Int) : ISeasonTime {
 
     companion object {
         val EPOCH = STime(0)
+
+        fun fromDay(day: Int): STime = STime(day * EPOCH.dayLength)
     }
 }
