@@ -9,5 +9,8 @@ interface ISeasonTime {
     val currentSeason: Season
     val currentSubSeason: Season.SubSeason
 
+    val currentDayInCycleRound: Int
+    val currentDayInCycle: Double
+
     val currentYearTicks: Int
 }

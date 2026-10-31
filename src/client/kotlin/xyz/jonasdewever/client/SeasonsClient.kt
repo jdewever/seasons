@@ -9,6 +9,7 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.TooltipFlag
+import xyz.jonasdewever.api.Crop
 import xyz.jonasdewever.client.api.SeasonHandlerClient
 import xyz.jonasdewever.client.network.ClientPayloads
 import xyz.jonasdewever.growth.Fertility
@@ -36,8 +37,11 @@ object SeasonsClient : ClientModInitializer {
         val name = stack.item.toString()
 
         if (Fertility.isAffectedPlant(name)) {
-            val current = SeasonHandlerClient.getClientSeasonState(player.level()).currentSeason
+            val time = SeasonHandlerClient.getClientSeasonState(player.level())
+            val current = time.currentSeason
+            val currentGrowth = Crop.fromName(name).getModifier(time.currentDayInCycleRound)
             val peakSeasons = Fertility.seasonsForCrop(name)
+            lines.add(Component.literal("Current growth: ${(currentGrowth*100).toInt()}%"))
             if (peakSeasons.contains(current)) {
                 lines.add(Component.literal("In PEAK season"))
             }
