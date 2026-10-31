@@ -15,10 +15,6 @@ data class Keyframe(val day: Double, val value: Double) {
     }
 }
 
-// todo if not strict, when reaching slow growth rate, follow OSS behaviour (not here)
-// TODO allow wrapping; eg. day 0 of early spring should interpolate between the winter values and the early spring one
-
-
 class Crop private constructor(val name: String, val keyframes: List<Keyframe>) {
 
     val fertileSeasons: List<Season> = Fertility.seasonsForCrop(name)
@@ -66,9 +62,9 @@ class Crop private constructor(val name: String, val keyframes: List<Keyframe>) 
     companion object {
 
         // TODO play around with values for early and late
-        const val PEAK_GROWTH: Double = 1.2
-        const val EARLY_GROWTH: Double = .8
-        const val LATE_GROWTH: Double = .9
+        const val PEAK_GROWTH: Double = 1.0
+        const val EARLY_GROWTH: Double = .6
+        const val LATE_GROWTH: Double = .8
         val slowGrowthRate = Config.slowGrowthLowerLimit.get()
 
         fun fromName(name: String): Crop {
