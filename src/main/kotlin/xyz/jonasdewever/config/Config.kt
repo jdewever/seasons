@@ -10,6 +10,7 @@ object Config {
     val strictSeasons: Supplier<Boolean>
     val offSeasonBehaviour: Supplier<CropOffSeasonBehaviour>
     val slowGrowthLowerLimit: Supplier<Double>
+    val allowOSSWhenStrict: Supplier<Boolean>
     val beesStayIndoorInWinter: Supplier<Boolean>
 
     init {
@@ -29,17 +30,21 @@ object Config {
 
         builder.push("Crops").categoryComment("Pertaining crops")
 
-        strictSeasons =
-            builder.comment("Strictly enforce seasons? This means when a crop is not in season, it'll just not do anything at all.")
-                .define("strictSeasons", false)
-
         offSeasonBehaviour =
-            builder.comment("Crop behaviour when in an off season.")
+            builder.comment("Out Of Season (OSS) behaviour. What happens to the crop when it reaches minimum growth rate.")
                 .define("offSeasonBehaviour", CropOffSeasonBehaviour.GROW_SLOW)
 
         slowGrowthLowerLimit =
-            builder.comment("The lower limit for growth speed, used for the Out of Season behaviour. (percentage in decimal)")
+            builder.comment("The minimum growth rate, used for the Out of Season behaviour. (percentage in decimal)")
                 .define("slowGrowthLowerLimit", .2, 0.0, 1.0)
+
+        strictSeasons =
+            builder.comment("Strictly enforce season limits? If enabled, cuts off growth at the end of the peak season instantly. If disabled, the growth rate will gradually taper down (OOS behaviour kicks in only at minimum growth).")
+                .define("strictSeasons", false)
+
+        allowOSSWhenStrict =
+            builder.comment("Allow following the defined OSS behaviour when enforcing strict seasonal limits? This still cuts off the gradual tapering after a peak season ends, but instead of blocking growth completely, follows OSS behaviour.")
+                .define("allowOSSWhenStrict", true)
 
         builder.push("Mobs").categoryComment("Pertaining mobs")
 
