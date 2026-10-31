@@ -25,7 +25,10 @@ object CmdSetSeason {
 
         val level = ctx.source.level
         val data = SeasonHandler.getSeasonData(level)
-        data.yearTicks = STime.EPOCH.subSeasonLength * desiredSeason.ordinal
+
+        val baseYearTicks = STime.EPOCH.subSeasonLength * desiredSeason.ordinal
+        val ticksSinceMorning = level.overworldClockTime % STime.EPOCH.dayLength
+        data.yearTicks = baseYearTicks + ticksSinceMorning.toInt()
         data.setDirty()
 
         val newTime = STime(data.yearTicks)
